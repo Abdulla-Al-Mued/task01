@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
 
         requestPermissions()
 
-
+        notificationBuilder = NotificationCompat.Builder(this, "download_channel")
+        notificationManager = NotificationManagerCompat.from(this)
 
         binding.downloadBtn.setOnClickListener {
             val url = "https://file-examples.com/storage/fe1134defc6538ed39b8efa/2017/04/file_example_MP4_1920_18MG.mp4"
@@ -117,8 +118,8 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
-        notificationBuilder = NotificationCompat.Builder(this, "download_channel")
-        notificationManager = NotificationManagerCompat.from(this)
+        notificationBuilder.setContentTitle("Download in Progress")
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
 
         showNotification(currentProgress)
 
@@ -149,10 +150,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun showNotification(progress: Int) {
 
-        notificationBuilder.setContentTitle("Download in Progress")
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setContentText("Downloading... $currentProgress%")
-            .setProgress(100, currentProgress, false)
+        notificationBuilder
+            .setContentText("Downloading... $progress%")
+            .setProgress(100, progress, false)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
         val notificationId = 1
